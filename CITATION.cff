@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Golchinfar"
+  given-names: "David"
+  email: "info@vago-solutions.ai"
+  affiliation: "VAGO Solutions"
+title: "SauerkrautLM-ColPali: Multi-Vector Vision Retrieval Models"
+date-released: 2025-01-01
+url: "https://github.com/VAGOsolutions/sauerkrautlm-colpali"
+repository-code: "https://github.com/VAGOsolutions/sauerkrautlm-colpali"
+license: MIT
+keywords:
+  - document-retrieval
+  - vision-language-models
+  - multi-vector-embeddings
+  - colpali
+  - late-interaction
+
+references:
+  - type: software
+    title: "ColPali: Efficient Document Retrieval with Vision Language Models"
+    authors:
+      - family-names: "Faysse"
+        given-names: "Manuel"
+      - family-names: "Sibille"
+        given-names: "Hugues"
+      - family-names: "Wu"
+        given-names: "Tony"
+      - family-names: "Omrani"
+        given-names: "Bilel"
+      - family-names: "Viaud"
+        given-names: "Gautier"
+      - family-names: "Hudelot"
+        given-names: "Céline"
+      - family-names: "Colombo"
+        given-names: "Pierre"
+    url: "https://github.com/illuin-tech/colpali"
+    doi: "arXiv.2407.01449"
+    year: 2024

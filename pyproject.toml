@@ -1,0 +1,92 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.targets.wheel]
+include = ["sauerkrautlm_colpali"]
+
+[project]
+name = "sauerkrautlm-colpali"
+dynamic = ["version"]
+description = "SauerkrautLM-ColPali: Multi-vector vision retrieval models based on the ColPali architecture. Fork of colpali-engine with additional model architectures."
+authors = [
+    { name = "David Golchinfar", email = "info@vago-solutions.ai" },
+    { name = "VAGO Solutions", email = "info@vago-solutions.ai" },
+]
+maintainers = [
+    { name = "VAGO Solutions", email = "info@vago-solutions.ai" },
+]
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "numpy",
+    "peft>=0.14.0,<0.17.0",
+    "pillow>=10.0.0",
+    "requests",
+    "scipy",
+    "torch>=2.5.0,<2.8.0",
+    "torchvision",
+    "transformers>=4.57.1",
+]
+
+[project.optional-dependencies]
+# For ColMinistral3 models, transformers 5.0.0rc0 is required
+ministral = [
+    "transformers>=5.0.0rc0",
+]
+
+train = [
+    "accelerate>=0.34.0,<1.9.0",
+    "bitsandbytes",
+    "configue>=5.0.0",
+    "datasets>=2.19.1",
+    "mteb>=1.16.3,<2",
+    "pillow>=10.0.0,<11.4.0",
+    "typer>=0.15.1",
+]
+
+interpretability = [
+    "einops>=0.8.0,<1.0.0",
+    "matplotlib>=3.9.0,<4.0.0",
+    "seaborn>=0.13.2,<1.0.0",
+]
+
+dev = ["pytest>=8.0.0", "ruff>=0.4.0"]
+
+all = [
+    "sauerkrautlm-colpali[dev]",
+    "sauerkrautlm-colpali[interpretability]",
+    "sauerkrautlm-colpali[train]",
+    "sauerkrautlm-colpali[ministral]",
+]
+
+[project.urls]
+homepage = "https://github.com/VAGOsolutions/sauerkrautlm-colpali"
+repository = "https://github.com/VAGOsolutions/sauerkrautlm-colpali"
+documentation = "https://github.com/VAGOsolutions/sauerkrautlm-colpali#readme"
+
+[tool.pytest.ini_options]
+filterwarnings = ["ignore::Warning"]
+markers = ["slow: marks test as slow"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
