@@ -47,7 +47,7 @@ Traditional document retrieval relies on **OCR + Text Search**, which has signif
 - ✅ **End-to-end** - Single model for retrieval, no pipeline complexity
 
 <p align="center">
-  <img src="assets/benchmark_vidore_v1_vs_highdim.png" alt="ViDoRe v1 Benchmark - 128-dim vs High-dim" width="50%"/>
+  <img src="assets/benchmark_vidore_v1_vs_highdim.png" alt="ViDoRe v1 Benchmark - 128-dim vs High-dim" width="70%"/>
 </p>
 
 ## 🏆 Benchmark Results
@@ -313,29 +313,29 @@ If you use this package, please cite both the original ColPali paper and our wor
 
 ### ViDoRe v1 Benchmark (128-dim vs High-dim)
 <p align="center">
-  <img src="assets/benchmark_vidore_v1_vs_highdim.png" alt="ViDoRe v1 Benchmark" width="50%"/>
+  <img src="assets/benchmark_vidore_v1_vs_highdim.png" alt="ViDoRe v1 Benchmark" width="70%"/>
 </p>
 
 ### MTEB v1+v2 Benchmark (128-dim vs High-dim)
 <p align="center">
-  <img src="assets/benchmark_mteb_v1v2_vs_highdim.png" alt="MTEB v1+v2 Benchmark" width="50%"/>
+  <img src="assets/benchmark_mteb_v1v2_vs_highdim.png" alt="MTEB v1+v2 Benchmark" width="70%"/>
 </p>
 
 ### ViDoRe v3 Benchmark (128-dim vs High-dim)
 <p align="center">
-  <img src="assets/benchmark_vidore_v3_vs_highdim.png" alt="ViDoRe v3 Benchmark" width="50%"/>
+  <img src="assets/benchmark_vidore_v3_vs_highdim.png" alt="ViDoRe v3 Benchmark" width="70%"/>
 </p>
 
 ## 📋 Summary Tables
 
 ### 128-dim Models Comparison
 <p align="center">
-  <img src="assets/table_summary_128dim.png" alt="128-dim Models Summary" width="50%"/>
+  <img src="assets/table_summary_128dim.png" alt="128-dim Models Summary" width="70%"/>
 </p>
 
 ### Comparison vs High-dim Models
 <p align="center">
-  <img src="assets/table_summary_highdim_comparison.png" alt="High-dim Comparison" width="50%"/>
+  <img src="assets/table_summary_highdim_comparison.png" alt="High-dim Comparison" width="70%"/>
 </p>
 
 ## License
