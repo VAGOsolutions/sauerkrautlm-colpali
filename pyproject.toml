@@ -39,12 +39,18 @@ dependencies = [
     "torch>=2.5.0,<2.8.0",
     "torchvision",
     "transformers>=4.57.1",
+    "hf-transfer",
 ]
 
 [project.optional-dependencies]
 # For ColMinistral3 models, transformers 5.0.0rc0 is required
 ministral = [
     "transformers>=5.0.0rc0",
+]
+
+# Flash Attention 2 for faster inference (requires CUDA)
+flash = [
+    "flash-attn>=2.5.0",
 ]
 
 train = [
@@ -70,6 +76,7 @@ all = [
     "sauerkrautlm-colpali[interpretability]",
     "sauerkrautlm-colpali[train]",
     "sauerkrautlm-colpali[ministral]",
+    "sauerkrautlm-colpali[flash]",
 ]
 
 [project.urls]
