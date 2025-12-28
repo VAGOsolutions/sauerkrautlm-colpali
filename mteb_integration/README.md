@@ -1,28 +1,49 @@
 # SauerkrautLM-ColPali MTEB Integration
 
-This guide describes how to integrate the SauerkrautLM-ColPali models with MTEB.
+This guide describes how to integrate the SauerkrautLM-ColPali models into MTEB.
 
-## Step 1: Clone MTEB Repository
+## Step 1: Clone MTEB Repo
 
 ```bash
-cd /workspace
 git clone https://github.com/embeddings-benchmark/mteb.git
 cd mteb
 git checkout -b feat/sauerkrautlm-colpali
 pip install -e ".[dev]"
 ```
 
-## Step 2: Copy Integration Files
+## Step 2: Copy Wrapper File
 
-Copy the wrapper file into the MTEB repository:
+Copy the wrapper file into the MTEB repo:
 
 ```bash
-cp slm_models.py /workspace/mteb/mteb/models/model_implementations/slm_models.py
+cp mteb_integration/slm_models.py mteb/mteb/models/model_implementations/slm_models.py
 ```
 
-## Step 3: Test
+## Step 3: Add Dependencies to pyproject.toml
+
+Add to `pyproject.toml` under `[project.optional-dependencies]`:
+
+```toml
+slm-colqwen3 = [
+    "transformers>=4.47.0",
+    "torch>=2.0.0",
+    "sauerkrautlm-colpali @ git+https://github.com/VAGOsolutions/sauerkrautlm-colpali.git"
+]
+```
+
+And under `conflicts` (if present):
+
+```toml
+[{ extra = "slm-colqwen3" }, { extra = "pylate" }],
+[{ extra = "slm-colqwen3" }, { extra = "llm2vec" }],
+```
+
+## Step 4: Test
 
 ```bash
+# Install dependencies
+pip install -e ".[slm-colqwen3]"
+
 # Test that the model can be loaded
 python -c "
 import mteb
@@ -30,38 +51,58 @@ model = mteb.get_model('VAGOsolutions/SauerkrautLM-ColQwen3-2b-v0.1')
 print(f'Model loaded: {model}')
 "
 
-# Test on a task
+# Test on a ViDoRe task
 python -c "
 import mteb
 
 model = mteb.get_model('VAGOsolutions/SauerkrautLM-ColQwen3-2b-v0.1')
 tasks = mteb.get_tasks(tasks=['VidoreArxivQARetrieval'])
 evaluation = mteb.MTEB(tasks=tasks)
-results = evaluation.run(model, output_folder='results/slm-colqwen3-2b')
+results = evaluation.run(model, output_folder='results/colqwen3-2b')
 print(results)
 "
 ```
 
+## Step 5: Create PR
+
+```bash
+git add mteb/models/model_implementations/slm_models.py
+git add pyproject.toml
+git commit -m "model: Add SauerkrautLM-ColPali embedding models"
+git push origin feat/sauerkrautlm-colpali
+```
+
+Then create a PR on GitHub against `embeddings-benchmark/mteb:main`.
+
 ## Available Models
 
-| Model Name | Parameters | VRAM (bf16) | Max Tokens |
-|------------|------------|-------------|------------|
-| `VAGOsolutions/SauerkrautLM-ColQwen3-1.7b-Turbo-v0.1` | 1.7B | ~3.4 GB | 262K |
-| `VAGOsolutions/SauerkrautLM-ColQwen3-2b-v0.1` | 2.2B | ~4.4 GB | 262K |
-| `VAGOsolutions/SauerkrautLM-ColQwen3-4b-v0.1` | 4B | ~8 GB | 262K |
-| `VAGOsolutions/SauerkrautLM-ColQwen3-8b-v0.1` | 8B | ~16 GB | 262K |
-| `VAGOsolutions/SauerkrautLM-ColLFM2-450M-v0.1` | 450M | ~0.9 GB | 32K |
-| `VAGOsolutions/SauerkrautLM-ColMinistral3-3b-v0.1` | 3B | ~6 GB | 262K |
+| Model | HuggingFace ID | Dim | Parameters |
+|-------|----------------|-----|------------|
+| ColQwen3-2b | `VAGOsolutions/SauerkrautLM-ColQwen3-2b-v0.1` | 128 | 2.2B |
+| ColQwen3-4b | `VAGOsolutions/SauerkrautLM-ColQwen3-4b-v0.1` | 128 | 4.0B |
+| ColQwen3-8b | `VAGOsolutions/SauerkrautLM-ColQwen3-8b-v0.1` | 128 | 8.3B |
+| ColQwen3-1.7b-Turbo | `VAGOsolutions/SauerkrautLM-ColQwen3-1.7b-Turbo-v0.1` | 128 | 1.7B |
+| ColLFM2-450M | `VAGOsolutions/SauerkrautLM-ColLFM2-450M-v0.1` | 128 | 450M |
+| ColMinistral3-3b | `VAGOsolutions/SauerkrautLM-ColMinistral3-3b-v0.1` | 128 | 3.0B |
+
+## PR Checklist
+
+```markdown
+- [x] I have filled out the ModelMeta object to the extent possible
+- [x] I have ensured that my model can be loaded using
+  - [x] `mteb.get_model(model_name, revision)` and
+  - [x] `mteb.get_model_meta(model_name, revision)`
+- [x] I have tested the implementation works on a representative set of tasks.
+- [x] The model is public, i.e., is available either as an API or the weights are publicly available to download
+```
 
 ## Important Notes
 
-1. **Model Names**: The `name` in `ModelMeta` must exactly match the HuggingFace repository name.
-
-2. **ColMinistral3**: Requires `transformers>=5.0.0rc0`. Install with:
+1. **Installation for Users**: After the PR is merged, users can simply install with:
    ```bash
-   pip install "sauerkrautlm-colpali[ministral]"
+   pip install mteb[slm-colqwen3]
    ```
 
-3. **Multi-Vector Embeddings**: For ViDoRe tasks, MTEB uses `get_image_embeddings()` and `get_text_embeddings()` methods with MaxSim scoring.
+2. **Multi-Vector Embeddings**: The models use ColBERT-style multi-vector embeddings with MaxSim scoring for ViDoRe tasks.
 
-4. **Supported Languages**: English, German, French, Spanish, Italian, Portuguese
+3. **GPU Recommended**: For optimal performance, a GPU with at least 8GB VRAM is recommended (depending on model size).
