@@ -42,6 +42,7 @@ class ColMinistral3(nn.Module):
         config: str | PreTrainedModel = "mistralai/Ministral-3-3B-Instruct-2512",
         dim: int = 128,
         mask_non_image_embeddings: bool = False,
+        torch_dtype: torch.dtype = torch.bfloat16,
     ):
         """
         Initialize ColMinistral3 model.
@@ -50,8 +51,11 @@ class ColMinistral3(nn.Module):
             config: Path or name of the base Ministral-3 model, or a PreTrainedModel instance
             dim: Dimension of the output embeddings (default: 128)
             mask_non_image_embeddings: Whether to mask non-image embeddings (default: False)
+            torch_dtype: Data type for model weights (default: torch.bfloat16)
         """
         super().__init__()
+        
+        self._torch_dtype = torch_dtype
         
         # Load base model
         if isinstance(config, str):
@@ -59,13 +63,13 @@ class ColMinistral3(nn.Module):
                 from transformers import Mistral3ForConditionalGeneration
                 self.base_model = Mistral3ForConditionalGeneration.from_pretrained(
                     config,
-                    torch_dtype=torch.bfloat16,
+                    torch_dtype=torch_dtype,
                 )
             except ImportError:
                 # Fallback to Auto
                 self.base_model = AutoModelForImageTextToText.from_pretrained(
                     config,
-                    torch_dtype=torch.bfloat16,
+                    torch_dtype=torch_dtype,
                     trust_remote_code=True,
                 )
         else:
@@ -92,8 +96,8 @@ class ColMinistral3(nn.Module):
         with torch.no_grad():
             nn.init.normal_(self.custom_text_proj.weight, mean=0.0, std=0.02)
         
-        # Convert to bfloat16 to match base model
-        self.custom_text_proj = self.custom_text_proj.to(torch.bfloat16)
+        # Convert to specified dtype to match base model
+        self.custom_text_proj = self.custom_text_proj.to(torch_dtype)
     
     def forward(self, *args, **kwargs) -> torch.Tensor:
         """
@@ -138,6 +142,7 @@ class ColMinistral3(nn.Module):
     def from_pretrained(
         cls,
         pretrained_model_name_or_path: str,
+        torch_dtype: torch.dtype = torch.bfloat16,
         **kwargs,
     ) -> "ColMinistral3":
         """
@@ -145,6 +150,7 @@ class ColMinistral3(nn.Module):
         
         Args:
             pretrained_model_name_or_path: Path to model directory or HuggingFace model ID
+            torch_dtype: Data type for model weights (default: torch.bfloat16)
             **kwargs: Additional arguments for model initialization
             
         Returns:
@@ -174,7 +180,7 @@ class ColMinistral3(nn.Module):
                     from transformers import Mistral3ForConditionalGeneration
                     base_model = Mistral3ForConditionalGeneration.from_pretrained(
                         str(model_path),
-                        torch_dtype=torch.bfloat16,
+                        torch_dtype=torch_dtype,
                         device_map=None,
                         local_files_only=True,
                     )
@@ -183,7 +189,7 @@ class ColMinistral3(nn.Module):
                     from transformers import AutoModelForImageTextToText
                     base_model = AutoModelForImageTextToText.from_pretrained(
                         str(model_path),
-                        torch_dtype=torch.bfloat16,
+                        torch_dtype=torch_dtype,
                         device_map=None,
                         trust_remote_code=True,
                         local_files_only=True,
