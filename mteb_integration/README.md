@@ -24,7 +24,7 @@ cp mteb_integration/slm_models.py mteb/mteb/models/model_implementations/slm_mod
 Add to `pyproject.toml` under `[project.optional-dependencies]`:
 
 ```toml
-slm-colqwen3 = [
+sauerkrautlm-colpali = [
     "transformers>=4.47.0",
     "torch>=2.0.0",
     "sauerkrautlm-colpali @ git+https://github.com/VAGOsolutions/sauerkrautlm-colpali.git"
@@ -34,15 +34,15 @@ slm-colqwen3 = [
 And under `conflicts` (if present):
 
 ```toml
-[{ extra = "slm-colqwen3" }, { extra = "pylate" }],
-[{ extra = "slm-colqwen3" }, { extra = "llm2vec" }],
+[{ extra = "sauerkrautlm-colpali" }, { extra = "pylate" }],
+[{ extra = "sauerkrautlm-colpali" }, { extra = "llm2vec" }],
 ```
 
 ## Step 4: Test
 
 ```bash
 # Install dependencies
-pip install -e ".[slm-colqwen3]"
+pip install -e ".[sauerkrautlm-colpali]"
 
 # Test that the model can be loaded
 python -c "
@@ -100,7 +100,7 @@ Then create a PR on GitHub against `embeddings-benchmark/mteb:main`.
 
 1. **Installation for Users**: After the PR is merged, users can simply install with:
    ```bash
-   pip install mteb[slm-colqwen3]
+   pip install mteb[sauerkrautlm-colpali]
    ```
 
 2. **Multi-Vector Embeddings**: The models use ColBERT-style multi-vector embeddings with MaxSim scoring for ViDoRe tasks.
